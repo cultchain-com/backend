@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: '/bin/bash -c "chmod +x /usr/src/app/docker-entrypoint.sh && /usr/src/app/docker-entrypoint.sh"'
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=cultchain_db
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    build: .
+    command: celery -A cultchian_backend worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+  celery_beat:
+    build: .
+    command: celery -A cultchian_backend beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+volumes:
+  postgres_data:
