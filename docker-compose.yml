@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  traefik: # new
+    image: traefik:v2.9.6
+    ports:
+      - 8008:80
+      - 8081:8080
+    volumes:
+      - "$PWD/traefik.dev.toml:/etc/traefik/traefik.toml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   web:
     build: .
     command: '/bin/bash -c "chmod +x /usr/src/app/docker-entrypoint.sh && /usr/src/app/docker-entrypoint.sh"'
@@ -8,10 +17,15 @@ services:
       - .:/usr/src/app/
     ports:
       - 8000:8000
+    expose:
+      - 8000
     depends_on:
       - db
     env_file:
       - ./.env
+    labels: # new
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.rule=Host(`django.localhost`)"
 
   db:
     image: postgres:13
