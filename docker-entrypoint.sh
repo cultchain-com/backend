@@ -1,12 +1,12 @@
 #!/bin/bash -xe
 
+python manage.py makemigrations user_profile
+python manage.py migrate
+
 python manage.py makemigrations indexer
 python manage.py migrate indexer
 
 python manage.py makemigrations contract_parser
-python manage.py migrate
-
-python manage.py makemigrations user_profile
 python manage.py migrate
 
 python manage.py collectstatic --noinput
