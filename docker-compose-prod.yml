@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: "traefik:v2.5"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--api.insecure=true"  # Enables the web UI dashboard. Remove for production.
+    ports:
+      - "80:80"
+      - "8080:8080"  # For the web UI dashboard. Remove for production.
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.toml:/etc/traefik/traefik.toml"
+
+  web:
+    build: .
+    command: '/bin/bash -c "chmod +x /usr/src/app/docker-entrypoint.sh && /usr/src/app/docker-entrypoint.sh"'
+    volumes:
+      - .:/usr/src/app/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`cultchain.com`)"
+      - "traefik.http.routers.web.entrypoints=web"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=cultchain_db
+
+  redis:
+    image: "redis:latest"
+
+  celery_worker:
+    build: .
+    command: celery -A cultchian_backend worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+  celery_beat:
+    build: .
+    command: celery -A cultchian_backend beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+
+volumes:
+  postgres_data:
