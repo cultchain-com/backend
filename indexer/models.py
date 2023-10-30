@@ -123,6 +123,9 @@ class Donation(models.Model):
     timestamp = models.DateTimeField()
     message = models.TextField()
 
+    class Meta:
+        unique_together = ['donor', 'amount', 'event', 'timestamp', 'message']
+
     def __str__(self):
         return f"{self.donor.wallet_address} donated {self.amount} to {self.event}"
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Thirdpary
     'rest_framework',
+    'drf_yasg',
     # Apps
     'contract_parser',
     'indexer',
@@ -94,6 +95,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cultchian_backend.wsgi.application'
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

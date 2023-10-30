@@ -484,26 +484,28 @@ def handle_donated_to_event_event():
         fromBlock=contract_obj.last_processed_event_block, toBlock="latest")
 
     for event in donated_to_event_events:
+        try:
+            donor_address = event['args']['donor']
+            amount = Decimal(event['args']['amount'])
+            event_id = event['args']['eventId']
+            message = event['args']['message']
+            block_number = event['blockNumber']
+            timestamp = web3.eth.get_block(block_number)["timestamp"]
+            event_instance = Event.objects.get(id=event_id)
+            donor_profile, created = UserProfile.objects.get_or_create(wallet_address=donor_address)
+            Donation.objects.create(
+                donor=donor_profile,
+                amount=Decimal(amount),
+                event=event_instance,
+                timestamp=datetime.datetime.fromtimestamp(timestamp),
+                message=message
+            )
+            # Updating the collected_amount of the related Event
+            event_instance.collected_amount += Decimal(amount)
+            event_instance.save()
 
-        donor_address = event['args']['donor']
-        amount = Decimal(event['args']['amount'])
-        event_id = event['args']['eventId']
-        message = event['args']['message']
-        block_number = event['blockNumber']
-        timestamp = web3.eth.get_block(block_number)["timestamp"]
-        event_instance = Event.objects.get(id=event_id)
-        donor_profile, created = UserProfile.objects.get_or_create(wallet_address=donor_address)
-        Donation.objects.create(
-            donor=donor_profile,
-            amount=Decimal(amount),
-            event=event_instance,
-            timestamp=datetime.datetime.fromtimestamp(timestamp),
-            message=message
-        )
-        # Updating the collected_amount of the related Event
-        event_instance.collected_amount += Decimal(amount)
-        event_instance.save()
-
+        except Exception as e:
+            print(e)
 
 def handle_fund_released_to_creator_event():
     contract_obj = Contract.objects.get(contract_name="Fundraising")
