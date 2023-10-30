@@ -4,23 +4,16 @@ services:
   traefik:
     image: "traefik:v2.5"
     command:
+      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web-secure.address=:443"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=info@cultchain.foundation"
-      - "--certificatesresolvers.letsencrypt.acme.storage=acme.json"
     ports:
       - "80:80"
-      - "443:443"
+      - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik.toml:/traefik.toml"
-      - "./acme.json:/acme.json"
-    labels:
-      - "traefik.http.routers.api.rule=Host(`monitor.cultchain.com`)"
-      - "traefik.http.routers.api.service=api@internal"
+
 
   web:
     build: .
@@ -28,9 +21,9 @@ services:
     volumes:
       - .:/usr/src/app/
     labels:
-      - "traefik.http.routers.web-secure.entrypoints=web-secure"
-      - "traefik.http.routers.web-secure.rule=Host(`cultchain.com`)"
-      - "traefik.http.routers.web-secure.tls.certresolver=letsencrypt"
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`cultchain.com`)"
+      - "traefik.http.routers.web.entrypoints=web"
     env_file:
       - ./.env
     depends_on:

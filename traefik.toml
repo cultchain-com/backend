@@ -2,14 +2,15 @@
   [entryPoints.web]
     address = ":80"
 
-  [entryPoints.web-secure]
+  [entryPoints.websecure]
     address = ":443"
 
-[certificatesResolvers.letsencrypt.acme]
-  email = "info@cultchain.foundation"
-  storage = "acme.json"
-  [certificatesResolvers.letsencrypt.acme.httpChallenge]
-    entryPoint = "web"
+[api]
+  dashboard = true
+  insecure = true
+
+[log]
+  level = "ERROR"
 
 [providers.docker]
   exposedByDefault = false
