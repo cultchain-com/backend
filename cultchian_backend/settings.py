@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-s+&iii^7cpeg7k_0zbb1w&))rz%m4lai!9u&122n4-=a7+c4)+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['cultchain.com', 'www.cultchain.com']
+CSRF_TRUSTED_ORIGINS = ['https://cultchain.com', 'https://www.cultchain.com']
 CSRF_COOKIE_DOMAIN = 'cultchain.com'
 
 # Application definition
