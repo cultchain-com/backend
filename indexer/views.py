@@ -9,6 +9,7 @@ from .serializers import *
 from rest_framework.response import Response
 from django.db.models import Q
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 
 
 class EventList(generics.ListCreateAPIView):
@@ -218,9 +219,61 @@ class UserProfileDetailView(generics.RetrieveUpdateAPIView):
             400: "Invalid input"
         }
     )
-
     def get_object(self):
-        filter_kwargs = Q(id=self.kwargs.get('identifier')) | Q(wallet_address=self.kwargs.get('identifier'))
-        obj = get_object_or_404(UserProfile, filter_kwargs)
+        identifier = self.kwargs.get('identifier')
+        try:
+            # First, try to retrieve by ID
+            obj = UserProfile.objects.get(id=identifier)
+        except (UserProfile.DoesNotExist, ValueError):  # ValueError will catch non-integer IDs
+            # If not found by ID, try to retrieve by wallet_address
+            obj = get_object_or_404(UserProfile, wallet_address=identifier)
         self.check_object_permissions(self.request, obj)
         return obj
+
+
+class ValidatorRequestListView(generics.ListAPIView):
+    queryset = ValidatorRequest.objects.all()
+    serializer_class = ValidatorRequestSerializer
+
+
+class EventWithdrawRequestListView(generics.ListAPIView):
+    serializer_class = WithdrawRequestSerializer
+
+    def get_queryset(self):
+        event_id = self.kwargs['event_id']
+        return WithdrawRequest.objects.filter(event__id=event_id)
+
+
+class EventFundReleaseListView(generics.ListAPIView):
+    serializer_class = FundReleaseSerializer
+
+    def get_queryset(self):
+        event_id = self.kwargs['event_id']
+        return FundRelease.objects.filter(event__id=event_id)
+
+
+class EventCategoryListView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        category = self.kwargs['category']
+        return Event.objects.filter(category=category)
+
+
+@api_view(['GET'])
+def total_amount_raised(request):
+    total = Event.objects.aggregate(Sum('collected_amount'))
+    return Response({'total_amount_raised': total['collected_amount__sum']})
+
+
+@api_view(['GET'])
+def analytics_summary(request):
+    total_events = Event.objects.count()
+    total_milestones = Milestone.objects.count()
+    total_donations = Donation.objects.count()
+
+    return Response({
+        'total_events': total_events,
+        'total_milestones': total_milestones,
+        'total_donations': total_donations,
+    })

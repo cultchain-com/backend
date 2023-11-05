@@ -66,3 +66,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = '__all__'
+
+
+class ValidatorRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ValidatorRequest
+        fields = '__all__'
+
+
+class WithdrawRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WithdrawRequest
+        fields = '__all__'
+
+
+class FundReleaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FundRelease
+        fields = '__all__'
