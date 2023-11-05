@@ -15,4 +15,4 @@ from .settings import BASE_DIR
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cultchian_backend.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root=os.path.join(BASE_DIR, 'staticfiles'))
+application = WhiteNoise(application, root='/usr/src/app/staticfiles')
