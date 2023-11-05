@@ -15,7 +15,7 @@ python manage.py migrate
 python manage.py makemigrations blog
 python manage.py migrate
 
-python manage.py collectstatic --noinput
+python manage.py collectstatic --no-input --clear
 
 if [ "$DJANGO_SUPERUSER_USERNAME" ]
 then
