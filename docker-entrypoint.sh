@@ -9,6 +9,12 @@ python manage.py migrate indexer
 python manage.py makemigrations contract_parser
 python manage.py migrate
 
+python manage.py makemigrations miscellaneous
+python manage.py migrate
+
+python manage.py makemigrations blog
+python manage.py migrate
+
 python manage.py collectstatic --noinput
 
 if [ "$DJANGO_SUPERUSER_USERNAME" ]
