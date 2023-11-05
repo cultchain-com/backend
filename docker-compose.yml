@@ -6,8 +6,8 @@ services:
     command: '/bin/bash -c "chmod +x /usr/src/app/docker-entrypoint.sh && /usr/src/app/docker-entrypoint.sh"'
     volumes:
       - .:/usr/src/app/
-      - static_volume:/usr/src/app/static
-      - media_volume:/usr/src/app/media
+      - /srv/cultchain/static:/usr/src/app/static
+      - /srv/cultchain/media:/usr/src/app/media
     ports:
       - 8000:8000
     expose:
@@ -51,5 +51,3 @@ services:
 
 volumes:
   postgres_data:
-  static_volume:
-  media_volume:

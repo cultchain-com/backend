@@ -6,9 +6,6 @@ FROM python:3.10.7-slim-buster
 # set work directory
 WORKDIR /usr/src/app
 
-RUN mkdir /usr/src/app/static
-RUN mkdir /usr/src/app/media
-
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
