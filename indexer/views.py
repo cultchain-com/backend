@@ -96,8 +96,11 @@ class CommitteeDetailView(generics.RetrieveAPIView):
 
 
 class CommitteeListView(generics.ListAPIView):
-    queryset = Committee.objects.all()
+    # queryset = Committee.objects.all()
     serializer_class = CommitteeSerializer
+
+    def get_queryset(self):
+        return Committee.objects.all().select_related('event', 'milestone')
 
 
 class EventDonorsView(generics.ListAPIView):

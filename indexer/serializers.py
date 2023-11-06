@@ -19,15 +19,28 @@ class CommitteeMembershipSerializer(serializers.ModelSerializer):
 
 class CommitteeSerializer(serializers.ModelSerializer):
     members = CommitteeMembershipSerializer(source='committeemembership_set', many=True)
+    related_object = serializers.SerializerMethodField()
 
     class Meta:
         model = Committee
-        fields = (
-        'committee_id', 'total_members', 'yes_votes', 'no_votes', 'final_decision', 'committee_type', 'milestone_index',
-        'committee_type_id', 'members')
+        fields = '__all__'
+
+    def get_related_object(self, obj):
+        # Determine the related object based on committee_type and return its serialized data
+        if obj.committee_type == 'Event':
+            event = Event.objects.filter(committee_id=obj.committee_type_id).first()
+            return EventSerializer(event).data if event else None
+        elif obj.committee_type == 'Milestone':
+            milestone = Milestone.objects.filter(event__committee_id=obj.committee_type_id, milestone_index=obj.milestone_index).first()
+            return MilestoneSerializer(milestone).data if milestone else None
+        elif obj.committee_type == 'Validator':
+            validator_request = ValidatorRequest.objects.filter(committee_id=obj.committee_type_id).first()
+            return ValidatorRequestSerializer(validator_request).data if validator_request else None
+        return None
 
 
 class EventSerializer(serializers.ModelSerializer):
+    creator_wallet_address = serializers.CharField(source='creator.wallet_address', read_only=True)
     milestones = MilestoneSerializer(many=True, read_only=True)
     committees = CommitteeSerializer(many=True, read_only=True)
 
