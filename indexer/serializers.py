@@ -78,7 +78,17 @@ class DonorLeaderboardSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = [
+            'user_type', 'wallet_address', 'name', 'email', 'phone_number',
+            'date_joined', 'is_donor', 'is_validator', 'is_creator',
+            'twitter_link', 'facebook_link', 'instagram_link', 'linkedin_link',
+            'company_name', 'company_registration_number'
+        ]
+        read_only_fields = ['wallet_address', 'date_joined']  # These fields should not be updated
+
+    def update(self, instance, validated_data):
+        # Add custom update logic here if necessary
+        return super().update(instance, validated_data)
 
 
 class ValidatorRequestSerializer(serializers.ModelSerializer):
