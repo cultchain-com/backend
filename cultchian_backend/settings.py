@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     # Thirdpary
     'rest_framework',
     'drf_yasg',
+    'ckeditor',
+    'ckeditor_uploader',
     # Apps
     'contract_parser',
     'indexer',
@@ -136,6 +138,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
