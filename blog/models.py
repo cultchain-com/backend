@@ -1,10 +1,11 @@
 from django.db import models
 from django.conf import settings
+from ckeditor.fields import RichTextField
 
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
-    body = models.TextField()
+    body = RichTextField()
     header_image = models.ImageField(upload_to='post_headers/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
