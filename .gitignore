@@ -3,6 +3,8 @@
 *.py[cod]
 
 /venv
+/media/
+/staticfiles/
 .idea/
 **/__init__.py
 .env
