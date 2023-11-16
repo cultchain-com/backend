@@ -16,7 +16,7 @@ class BlogPost(models.Model):
     body = RichTextField()
     header_image = models.ImageField(upload_to='post_headers/', null=True, blank=True)
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, default='Health')
-    keywords = models.CharField(max_length=255, help_text="Comma-separated keywords for SEO")
+    keywords = models.CharField(max_length=255, null=True, help_text="Comma-separated keywords for SEO")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -9,7 +9,7 @@ class UserProfile(models.Model):
 
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default='Personal')
     wallet_address = models.CharField(max_length=42, unique=True)
-    bio = models.TextField(blank=True, null=True, description="User biography")
+    bio = models.TextField(blank=True, null=True, help_text="User biography")
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(unique=True, blank=True, null=True)
