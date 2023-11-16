@@ -5,6 +5,7 @@
 /venv
 /media/
 /staticfiles/
+/static/
 .idea/
 **/__init__.py
 .env
