@@ -6,7 +6,7 @@ from django.db import models
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'header_image', 'created_at')
-    search_fields = ('title', 'body')
+    search_fields = ('title', 'body', 'keywords')
     formfield_overrides = {
         models.TextField: {'widget': CKEditorUploadingWidget},
     }
