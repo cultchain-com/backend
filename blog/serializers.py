@@ -7,7 +7,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['title', 'body', 'header_image', 'created_at', 'updated_at', 'author_name', 'category', 'keywords']
+        fields = '__all__'
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
