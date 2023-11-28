@@ -29,7 +29,7 @@ class BlogPost(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('blog_detail', kwargs={'id': self.id})
+        return reverse('blogpost-detail', kwargs={'pk': self.pk})
 
 
 class BlogImage(models.Model):
