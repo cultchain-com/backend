@@ -21,6 +21,13 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.contrib.sitemaps.views import sitemap
+from blog.sitemaps import BlogPostSitemap
+
+sitemaps = {
+    'blog': BlogPostSitemap,
+    # Add other sitemaps here
+}
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -45,6 +52,8 @@ urlpatterns = [
         path('indexer/', include('indexer.urls')),
         path('mics/', include('miscellaneous.urls')),
         path('blog/', include('blog.urls')),
+
+        path('sitemap.xml/', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     ]))
 ]
