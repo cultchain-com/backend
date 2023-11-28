@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from ckeditor.fields import RichTextField
+from django.urls import reverse
 
 
 class BlogPost(models.Model):
@@ -26,6 +27,9 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog_detail', kwargs={'id': self.id})
 
 
 class BlogImage(models.Model):
